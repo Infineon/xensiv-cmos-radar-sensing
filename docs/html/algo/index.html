@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Algorithm &mdash; Presence Detection and Tracking 1.0.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=97d60ecb" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=a12e3537"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Going embedded" href="../embedded/index.html" />
+    <link rel="prev" title="XENSIV™ CMOS Radar Presence Detection and Tracking" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Presence Detection and Tracking
+              <img src="../_static/ifx-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XENSIV™ CMOS Radar Presence Detection and Tracking</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Algorithm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-it-works">How It Works</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#preprocessing-stage">Preprocessing Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detection-stage">Detection Stage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tracking-stage">Tracking Stage</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#what-it-detects">What It Detects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#detection-types">Detection Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tracking-information">Tracking Information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#programming-interfaces">Programming Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#wrapper-api">Wrapper API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-case-api">Use-Case API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../embedded/index.html">Going embedded</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../known_issues.html">Known Limitations</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Presence Detection and Tracking</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Algorithm</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="algorithm">
+<h1>Algorithm<a class="headerlink" href="#algorithm" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>The Presence Detection and Tracking (PDT) algorithm converts raw data from the XENSIV™ 60 GHz CMOS radar sensor into real-time insights on indoor human activity. Because it operates on a frequency spectrum independent of visible light, the system ensures consistent performance in total darkness or low-visibility conditions without requiring optical clarity.</p>
+<p><strong>Key Capabilities</strong></p>
+<ul class="simple">
+<li><p><strong>Privacy-Centric</strong>: Enables smart home automation, security, and occupancy monitoring without the privacy concerns of camera-based systems.</p></li>
+<li><p><strong>High Sensitivity</strong>: Detects a full spectrum of activity, from micro-movements like breathing to active full-body motion.</p></li>
+</ul>
+</section>
+<section id="how-it-works">
+<h2>How It Works<a class="headerlink" href="#how-it-works" title="Link to this heading"></a></h2>
+<p>The algorithm processes each radar frame through a three-stage pipeline: preprocessing, detection, and tracking.</p>
+<section id="preprocessing-stage">
+<h3>Preprocessing Stage<a class="headerlink" href="#preprocessing-stage" title="Link to this heading"></a></h3>
+<p>Raw ADC data from the radar sensor undergoes range Fast Fourier Transform (FFT) to convert time-domain signals into frequency-domain spectra. A Zero-Doppler buffer accumulates static components across multiple chirps within each frame, creating a complex spectrum that highlights stationary elements.</p>
+</section>
+<section id="detection-stage">
+<h3>Detection Stage<a class="headerlink" href="#detection-stage" title="Link to this heading"></a></h3>
+<p>Three parallel detection chains analyze the processed data simultaneously:</p>
+<ul class="simple">
+<li><p><strong>Macro Detection</strong>: Identifies large-scale movements and displacements, such as walking or running</p></li>
+<li><p><strong>Micro Detection</strong>: Detects smaller motions without significant displacement, like hand gestures or posture changes</p></li>
+<li><p><strong>Static Detection</strong>: Captures very subtle movements, including breathing or minor vibrations</p></li>
+</ul>
+<p>All detections are then filtered by range and angle masks and transformed into a unified cylindrical coordinate system that accounts for the sensor’s mounting position and orientation.</p>
+</section>
+<section id="tracking-stage">
+<h3>Tracking Stage<a class="headerlink" href="#tracking-stage" title="Link to this heading"></a></h3>
+<p>Individual detections are associated across frames to create stable tracks with persistent IDs. A state machine manages the tracking process, ensuring reliable identification of people over time.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../_images/blocks.png"><img alt="../_images/blocks.png" src="../_images/blocks.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Algorithm Processing Pipeline</span><a class="headerlink" href="#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="what-it-detects">
+<h2>What It Detects<a class="headerlink" href="#what-it-detects" title="Link to this heading"></a></h2>
+<section id="detection-types">
+<h3>Detection Types<a class="headerlink" href="#detection-types" title="Link to this heading"></a></h3>
+<p>Each detection includes spatial and motion information:</p>
+<ul class="simple">
+<li><p><strong>Range</strong>: Ground-projected distance from the sensor in meters</p></li>
+<li><p><strong>Azimuth</strong>: Horizontal angle in degrees (negative left, positive right)</p></li>
+<li><p><strong>Elevation</strong>: Height above ground in meters</p></li>
+<li><p><strong>Doppler</strong>: Radial velocity in m/s</p></li>
+<li><p><strong>Magnitude</strong>: Signal strength in dB</p></li>
+<li><p><strong>Type</strong>: Which detection chain (macro, micro, or static)</p></li>
+</ul>
+</section>
+<section id="tracking-information">
+<h3>Tracking Information<a class="headerlink" href="#tracking-information" title="Link to this heading"></a></h3>
+<p>Tracked targets provide temporal consistency with additional properties:</p>
+<ul class="simple">
+<li><p><strong>ID</strong>: Unique identifier that persists across frames</p></li>
+<li><p><strong>Speed</strong>: Computed movement speed in m/s</p></li>
+<li><p><strong>Activity</strong>: Motion intensity metric (0-10, where 10 is maximum for a moving person, &lt; 1 is mostly static)</p></li>
+</ul>
+</section>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>The algorithm adapts to different installation scenarios through mounting configuration:</p>
+<ul class="simple">
+<li><p><strong>Sensor Orientation</strong>: Tilt angle and mounting height above ground</p></li>
+<li><p><strong>Field of View</strong>: Range and angle limits to define the detection zone</p></li>
+</ul>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../_images/elevation.png"><img alt="../_images/elevation.png" src="../_images/elevation.png" style="width: 50%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Sensor Placement and Elevation Angles</span><a class="headerlink" href="#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The elevation angles shown indicate the sensor tilt range: positive values tilt the sensor upwards, while negative values tilt it downwards (tested from 0° to -60° for downward tilt).</p>
+<p>These settings create a detection area defined by range and angle limits in front of the sensor, filtering out irrelevant detections.</p>
+</section>
+<section id="programming-interfaces">
+<h2>Programming Interfaces<a class="headerlink" href="#programming-interfaces" title="Link to this heading"></a></h2>
+<p>The algorithm provides two levels of programming interfaces:</p>
+<section id="wrapper-api">
+<h3>Wrapper API<a class="headerlink" href="#wrapper-api" title="Link to this heading"></a></h3>
+<p>The <a class="reference internal" href="wrapper.html"><span class="std std-doc">Wrapper API</span></a> offers a low-level C interface for direct frame processing. It provides functions for:</p>
+<ul class="simple">
+<li><p>Getting default configuration</p></li>
+<li><p>Initializing the processing pipeline</p></li>
+<li><p>Processing individual radar frames</p></li>
+<li><p>Retrieving raw detection and tracking results</p></li>
+</ul>
+<p>This API is ideal for embedded systems or applications requiring fine-grained control over the algorithm.</p>
+</section>
+<section id="use-case-api">
+<h3>Use-Case API<a class="headerlink" href="#use-case-api" title="Link to this heading"></a></h3>
+<p>Built on top of the wrapper, the <a class="reference internal" href="api.html"><span class="std std-doc">Use-Case API</span></a> provides a stable, high-level interface with:</p>
+<ul class="simple">
+<li><p>Human-readable configuration options</p></li>
+<li><p>Event-driven processing with JSONL serialization</p></li>
+<li><p>Presence detection and tracking events</p></li>
+<li><p>Simplified integration for application development</p></li>
+</ul>
+<p>The Use-Case API abstracts complexity while providing robust, production-ready functionality for real-world applications.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="XENSIV™ CMOS Radar Presence Detection and Tracking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../embedded/index.html" class="btn btn-neutral float-right" title="Going embedded" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright - Infineon Technologies AG. Version 1.0.0 - e884d04.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
