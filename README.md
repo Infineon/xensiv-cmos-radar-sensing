@@ -2,7 +2,7 @@
 
 This library provides functions to interface with an algorithm for presence detection and tracking (PDT) of multiple targets using the XENSIV&trade; BGT60CUTRXX radar sensor.
 
-Details of algorithm implementation can be found in the [PDT algorithm](docs/html/algo/index.html)
+Details of algorithm implementation can be found in the [PDT algorithm](docs/algo/index.html)
 
 
 For further information of the radar sensor, please visit the website <https://www.infineon.com/part/BGT60CUTR13AIP>.

@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>C-Wrapper API &mdash; Presence Detection and Tracking 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=97d60ecb" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=84a24d03"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Use-Case API" href="api.html" />
+    <link rel="prev" title="Algorithm" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Presence Detection and Tracking
+              <img src="../_static/ifx-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XENSIV™ CMOS Radar Presence Detection and Tracking</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#how-it-works">How It Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#what-it-detects">What It Detects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#configuration">Configuration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#programming-interfaces">Programming Interfaces</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#c-wrapper-api">C-Wrapper API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#use-case-api">Use-Case API</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">C-Wrapper API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html">Use-Case API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../embedded/index.html">Going embedded</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../known_issues.html">Known Limitations</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Presence Detection and Tracking</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Algorithm</a></li>
+      <li class="breadcrumb-item active">C-Wrapper API</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="c-wrapper-api">
+<h1>C-Wrapper API<a class="headerlink" href="#c-wrapper-api" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The pipeline wrapper provides a simple C API for processing radar frames. It
+abstracts the complex processing pipeline into three main functions: getting
+the default configuration, initializing the pipeline, and processing frames.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The structures <code class="docutils literal notranslate"><span class="pre">ifx_var_config_t</span></code> and <code class="docutils literal notranslate"><span class="pre">ifx_result_t</span></code> contain
+algorithm-specific data and should be accessed and modified through the
+usecase high-level API.</p>
+</div>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>The following pseudo-code shows how to use the wrapper API:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Get default configuration */</span>
+<span class="n">ifx_var_config_t</span><span class="w"> </span><span class="n">config</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pipeline_get_default_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* handle error */</span>
+<span class="p">}</span>
+
+<span class="cm">/* Optional: override individual fields before init, e.g. mounting */</span>
+<span class="n">config</span><span class="p">.</span><span class="n">radar_mount_config</span><span class="p">.</span><span class="n">mounting_height_m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.4f</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">radar_mount_config</span><span class="p">.</span><span class="n">tilt_angle_deg</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="mf">15.0f</span><span class="p">;</span>
+
+<span class="cm">/* Initialize the pipeline */</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pipeline_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* handle error */</span>
+<span class="p">}</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(;;)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Wait for new radar frame */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">radar_frame</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span><span class="w"> </span><span class="cm">/* 3264 uint16 values */</span>
+
+<span class="w">    </span><span class="cm">/* Process the frame */</span>
+<span class="w">    </span><span class="n">ifx_result_t</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pipeline_process</span><span class="p">(</span><span class="n">radar_frame</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* handle error */</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Use the result */</span>
+<span class="w">    </span><span class="cm">/* result contains the processed output */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv427pipeline_get_default_configP16ifx_var_config_t">
+<span id="_CPPv327pipeline_get_default_configP16ifx_var_config_t"></span><span id="_CPPv227pipeline_get_default_configP16ifx_var_config_t"></span><span id="pipeline_get_default_config__ifx_var_config_tP"></span><span class="target" id="pipeline__wrapper_8h_1ad01e43993e345eaabdab6c8fbcfcf4e5"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pipeline_get_default_config</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ifx_var_config_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv427pipeline_get_default_configP16ifx_var_config_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Get default configuration. </p>
+<p>Fills the provided config structure with default values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> – Configuration structure to fill</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, non-zero on error </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="initialization">
+<h2>Initialization<a class="headerlink" href="#initialization" title="Link to this heading"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv413pipeline_initPK16ifx_var_config_t">
+<span id="_CPPv313pipeline_initPK16ifx_var_config_t"></span><span id="_CPPv213pipeline_initPK16ifx_var_config_t"></span><span id="pipeline_init__ifx_var_config_tCP"></span><span class="target" id="pipeline__wrapper_8h_1ad78655e5304b5ebdd2b460fc05bbd340"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pipeline_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">ifx_var_config_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv413pipeline_initPK16ifx_var_config_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Configure and initialize the processing pipeline. </p>
+<p>Must be called before any processing</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> – Configuration structure</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, non-zero on error </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="processing">
+<h2>Processing<a class="headerlink" href="#processing" title="Link to this heading"></a></h2>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416pipeline_processPK8uint16_tP12ifx_result_t">
+<span id="_CPPv316pipeline_processPK8uint16_tP12ifx_result_t"></span><span id="_CPPv216pipeline_processPK8uint16_tP12ifx_result_t"></span><span id="pipeline_process__uint16_tCP.ifx_result_tP"></span><span class="target" id="pipeline__wrapper_8h_1a6b5620de5e94ed76ebe5e536f5ca967b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pipeline_process</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">radar_frame</span></span>, <span class="n"><span class="pre">ifx_result_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">output</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416pipeline_processPK8uint16_tP12ifx_result_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Process a radar frame using stateful wrapper API. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radar_frame</strong> – Input radar frame data (3264 uint16 values) </p></li>
+<li><p><strong>output</strong> – Output structure (will be filled by this function)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, non-zero on error </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="algorithm-configuration">
+<h2>Algorithm configuration<a class="headerlink" href="#algorithm-configuration" title="Link to this heading"></a></h2>
+<p>The Presence Detection and Tracking (PDT) algorithm exposes a small number of
+parameters that can be adjusted by the integrator according to the use case
+and deployment environment. These parameters are members of the C struct
+<code class="docutils literal notranslate"><span class="pre">ifx_var_config_t</span></code> and are populated with defaults by
+<code class="docutils literal notranslate"><span class="pre">pipeline_get_default_config()</span></code>. The most commonly tuned fields are:</p>
+<ul class="simple">
+<li><p><strong>Mounting parameters</strong> — <code class="docutils literal notranslate"><span class="pre">radar_mount_config.mounting_height_m</span></code> and
+<code class="docutils literal notranslate"><span class="pre">radar_mount_config.tilt_angle_deg</span></code>.</p></li>
+<li><p><strong>Field of view</strong> — <code class="docutils literal notranslate"><span class="pre">fov_config.min_max_ground_range</span></code> and
+<code class="docutils literal notranslate"><span class="pre">fov_config.min_max_azimuth</span></code> to restrict the algorithm to the relevant
+region.</p></li>
+<li><p><strong>Radar TX orientation</strong> — <code class="docutils literal notranslate"><span class="pre">radar_mount_config.orientation_tx</span></code> (default
+<code class="docutils literal notranslate"><span class="pre">0</span></code> = <code class="docutils literal notranslate"><span class="pre">TopLeft</span></code>; other values are <code class="docutils literal notranslate"><span class="pre">BottomLeft</span> <span class="pre">=</span> <span class="pre">1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TopRight</span> <span class="pre">=</span> <span class="pre">2</span></code>, <code class="docutils literal notranslate"><span class="pre">BottomRight</span> <span class="pre">=</span> <span class="pre">3</span></code>).</p></li>
+</ul>
+<p>The default values are defined in the generated file
+<code class="docutils literal notranslate"><span class="pre">def_var_config_default.c</span></code> and copied into the user-supplied struct by
+<code class="docutils literal notranslate"><span class="pre">pipeline_get_default_config()</span></code>. For most integrations these fields should
+be overridden <strong>at runtime</strong> after calling <code class="docutils literal notranslate"><span class="pre">pipeline_get_default_config()</span></code>
+and before <code class="docutils literal notranslate"><span class="pre">pipeline_init()</span></code>, rather than by editing the generated source
+(which is overwritten on every build).</p>
+<section id="calibration-matrix-update">
+<h3>Calibration matrix update<a class="headerlink" href="#calibration-matrix-update" title="Link to this heading"></a></h3>
+<p>Imperfections in the transmitter (TX) to receiver (RX) path on the antenna
+side — especially for antenna-in-package designs — have a non-negligible
+impact on the phase information. Reflections from very short distances such
+as housings or radar covers also alter the phase. To compensate, a
+calibration matrix must be applied prior to the angle calculation.</p>
+<p>The calibration parameters are <strong>hardware-specific</strong>. When the radar sensor
+is used in a new housing, or when the antenna stack-up changes, the
+calibration parameters may need to be updated. In such cases please contact
+Infineon support to obtain an updated calibration matrix.</p>
+<p>The PDT algorithm uses one calibration matrix per plane:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">calib_mat.E</span></code> — 3×3 complex matrix for the E-plane</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">calib_mat.H</span></code> — 3×3 complex matrix for the H-plane</p></li>
+</ul>
+<p>Each matrix is stored as a flat array of 9 complex entries
+(<code class="docutils literal notranslate"><span class="pre">creal32_T[9]</span></code>) in <strong>row-major</strong> order. Each complex number is represented
+as two <code class="docutils literal notranslate"><span class="pre">float</span></code> values (<code class="docutils literal notranslate"><span class="pre">.re</span></code> followed by <code class="docutils literal notranslate"><span class="pre">.im</span></code>).</p>
+<p>The calibration values are part of the default configuration generated into
+<code class="docutils literal notranslate"><span class="pre">def_var_config_default.c</span></code>. To bake new calibration values into the build,
+update the initializer of the <code class="docutils literal notranslate"><span class="pre">calib_mat</span></code> member of the
+<code class="docutils literal notranslate"><span class="pre">var_config_default</span></code> struct as shown below (indices <code class="docutils literal notranslate"><span class="pre">Eij</span></code> / <code class="docutils literal notranslate"><span class="pre">Hij</span></code> use
+1-based row/column to match common conventions):</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="p">.</span><span class="n">calib_mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">1</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E11 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E12 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">0.026344</span><span class="p">,</span><span class="w">   </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">-0.0090608</span><span class="w">  </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E13 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E21 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">1</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E22 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E23 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E31 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E32 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">-0.52022</span><span class="p">,</span><span class="w">   </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">-0.84373</span><span class="w">    </span><span class="p">},</span><span class="w">   </span><span class="cm">/* E33 */</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">1</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H11 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">0.12753</span><span class="p">,</span><span class="w">    </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">0.18146</span><span class="w">     </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H12 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H13 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H21 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">-0.89418</span><span class="p">,</span><span class="w">   </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mf">0.29112</span><span class="w">     </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H22 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H23 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H31 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H32 */</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">1</span><span class="p">,</span><span class="w">          </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="mi">0</span><span class="w">           </span><span class="p">},</span><span class="w">   </span><span class="cm">/* H33 */</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="p">},</span>
+</pre></div>
+</div>
+<p>Alternatively, the matrix can be overridden at runtime after
+<code class="docutils literal notranslate"><span class="pre">pipeline_get_default_config()</span></code> and before <code class="docutils literal notranslate"><span class="pre">pipeline_init()</span></code>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ifx_var_config_t</span><span class="w"> </span><span class="n">config</span><span class="p">;</span>
+<span class="n">pipeline_get_default_config</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">);</span>
+
+<span class="cm">/* Overwrite E13 with new calibration values */</span>
+<span class="n">config</span><span class="p">.</span><span class="n">calib_mat</span><span class="p">.</span><span class="n">E</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">re</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.026344f</span><span class="p">;</span>
+<span class="n">config</span><span class="p">.</span><span class="n">calib_mat</span><span class="p">.</span><span class="n">E</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">im</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-0.0090608f</span><span class="p">;</span>
+
+<span class="n">pipeline_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Algorithm" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="api.html" class="btn btn-neutral float-right" title="Use-Case API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright - Infineon Technologies AG. Version 1.2.0 - 88ab146.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

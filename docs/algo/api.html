@@ -1,0 +1,1111 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Use-Case API &mdash; Presence Detection and Tracking 1.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=97d60ecb" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=84a24d03"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Going embedded" href="../embedded/index.html" />
+    <link rel="prev" title="C-Wrapper API" href="wrapper.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Presence Detection and Tracking
+              <img src="../_static/ifx-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">XENSIV™ CMOS Radar Presence Detection and Tracking</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Algorithm</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#how-it-works">How It Works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#what-it-detects">What It Detects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#configuration">Configuration</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#programming-interfaces">Programming Interfaces</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="index.html#c-wrapper-api">C-Wrapper API</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#use-case-api">Use-Case API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="wrapper.html">C-Wrapper API</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Use-Case API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../embedded/index.html">Going embedded</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../known_issues.html">Known Limitations</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Presence Detection and Tracking</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Algorithm</a></li>
+      <li class="breadcrumb-item active">Use-Case API</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="use-case-api">
+<h1>Use-Case API<a class="headerlink" href="#use-case-api" title="Link to this heading"></a></h1>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Link to this heading"></a></h2>
+<p>The following pseudo-code example shows how to run the use-case library. Please refer to the
+full embedded example how to receive radar frames on an embedded platform.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Get default configuration. Optionally modify it before initializing. */</span>
+<span class="n">ifx_usecase_config</span><span class="w"> </span><span class="n">config</span><span class="p">;</span>
+<span class="n">ifx_usecase_get_default_configuration</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">);</span>
+
+<span class="cm">/* Optionally adjust user settings (e.g. mounting height) before init:  */</span>
+<span class="cm">/* ifx_usecase_settings settings;                                        */</span>
+<span class="cm">/* ifx_usecase_get_default_settings(&amp;settings);                          */</span>
+<span class="cm">/* settings.sensor_mounting.mounting_height_m = 2.5f;                   */</span>
+<span class="cm">/* ifx_usecase_settings_set_settings(&amp;config, &amp;settings);                */</span>
+
+<span class="cm">/* Init use-case algorithm */</span>
+<span class="n">ifx_usecase_handle</span><span class="w"> </span><span class="n">usecase_handle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ifx_usecase_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">config</span><span class="p">);</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="n">reset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="cm">/* set to true to reset the pipeline state on the next frame */</span>
+
+<span class="k">for</span><span class="p">(;;)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* wait for new radar frame */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">uint16_t</span><span class="o">*</span><span class="w"> </span><span class="n">radar_frame_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">timestamp_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...;</span>
+
+<span class="w">    </span><span class="cm">/* run usecase with radar frame */</span>
+<span class="w">    </span><span class="n">ifx_event_flags</span><span class="w"> </span><span class="n">event_flags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IFX_EVENT_FLAG_NONE</span><span class="p">;</span>
+<span class="w">    </span><span class="n">ifx_usecase_process</span><span class="p">(</span><span class="n">usecase_handle</span><span class="p">,</span><span class="w"> </span><span class="n">reset</span><span class="p">,</span><span class="w"> </span><span class="n">radar_frame_data</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">event_flags</span><span class="p">);</span>
+<span class="w">    </span><span class="n">reset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* check for presence events */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">ifx_presence_event</span><span class="o">*</span><span class="w"> </span><span class="n">presence_event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">event_flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">IFX_EVENT_FLAG_PRESENCE</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">ifx_usecase_get_presence_event</span><span class="p">(</span><span class="n">usecase_handle</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">presence_event</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* handle presence event */</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* check for tracking events */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">ifx_tracking_event</span><span class="o">*</span><span class="w"> </span><span class="n">tracking_events</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">tracking_events_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">event_flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">IFX_EVENT_FLAG_TRACKING</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">ifx_usecase_get_tracking_events</span><span class="p">(</span><span class="n">usecase_handle</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tracking_events</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tracking_events_count</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* handle tracking events */</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* check for detection events */</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">ifx_detection</span><span class="o">*</span><span class="w"> </span><span class="n">detections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">detections_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">event_flags</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">IFX_EVENT_FLAG_DETECTIONS</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">ifx_usecase_get_detections</span><span class="p">(</span><span class="n">usecase_handle</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">detections</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">detections_count</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* handle detection events */</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* serialize all raised events as a JSONL line into a buffer */</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">json_buffer</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+<span class="w">    </span><span class="n">ifx_print_event</span><span class="p">(</span><span class="n">json_buffer</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">json_buffer</span><span class="p">),</span><span class="w"> </span><span class="n">usecase_handle</span><span class="p">,</span><span class="w"> </span><span class="n">event_flags</span><span class="p">,</span><span class="w"> </span><span class="n">timestamp_ms</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* de-initialize the library */</span>
+<span class="n">ifx_usecase_deinit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">usecase_handle</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="types">
+<h2>Types<a class="headerlink" href="#types" title="Link to this heading"></a></h2>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv418ifx_usecase_handle">
+<span id="_CPPv318ifx_usecase_handle"></span><span id="_CPPv218ifx_usecase_handle"></span><span id="ifx_usecase_handle"></span><span class="target" id="usecase__types_8h_1a4fe07cea21c3cc57fa73c8b9238e364f"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="n"><span class="pre">ifx_usecase</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_handle</span></span></span><a class="headerlink" href="#_CPPv418ifx_usecase_handle" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv418ifx_usecase_config">
+<span id="_CPPv318ifx_usecase_config"></span><span id="_CPPv218ifx_usecase_config"></span><span id="ifx_usecase_config"></span><span class="target" id="usecase__types_8h_1a130e16778cd3594af013f4a0c14d6f17"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">ifx_var_config_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_config</span></span></span><a class="headerlink" href="#_CPPv418ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</section>
+<section id="events">
+<h2>Events<a class="headerlink" href="#events" title="Link to this heading"></a></h2>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv418ifx_detection_type">
+<span id="_CPPv318ifx_detection_type"></span><span id="_CPPv218ifx_detection_type"></span><span class="target" id="usecase__events_8h_1af06dc5886188b76d5af54a2e9b3316c9"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_detection_type</span></span></span><a class="headerlink" href="#_CPPv418ifx_detection_type" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MACROE">
+<span id="_CPPv3N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MACROE"></span><span id="_CPPv2N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MACROE"></span><span class="target" id="usecase__events_8h_1af06dc5886188b76d5af54a2e9b3316c9a45610f77126dbc6447f25dd964c1868c"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_DETECTION_TYPE_CW_MACRO</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MACROE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MICROE">
+<span id="_CPPv3N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MICROE"></span><span id="_CPPv2N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MICROE"></span><span class="target" id="usecase__events_8h_1af06dc5886188b76d5af54a2e9b3316c9a32ec4a62f5b0edaf19ac6ccd99edeaed"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_DETECTION_TYPE_CW_MICRO</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_detection_type27IFX_DETECTION_TYPE_CW_MICROE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_detection_type28IFX_DETECTION_TYPE_CW_STATICE">
+<span id="_CPPv3N18ifx_detection_type28IFX_DETECTION_TYPE_CW_STATICE"></span><span id="_CPPv2N18ifx_detection_type28IFX_DETECTION_TYPE_CW_STATICE"></span><span class="target" id="usecase__events_8h_1af06dc5886188b76d5af54a2e9b3316c9aee0c94a3c2202a6cc43339546d995fbd"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_DETECTION_TYPE_CW_STATIC</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_detection_type28IFX_DETECTION_TYPE_CW_STATICE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv426ifx_usecase_get_detections18ifx_usecase_handlePPK13ifx_detectionP8uint32_t">
+<span id="_CPPv326ifx_usecase_get_detections18ifx_usecase_handlePPK13ifx_detectionP8uint32_t"></span><span id="_CPPv226ifx_usecase_get_detections18ifx_usecase_handlePPK13ifx_detectionP8uint32_t"></span><span id="ifx_usecase_get_detections__ifx_usecase_handle.ifx_detectionCPP.uint32_tP"></span><span class="target" id="usecase__events_8h_1ac9044dd3bd78be0697d15b8de9710889"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_detections</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413ifx_detection" title="ifx_detection"><span class="n"><span class="pre">ifx_detection</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">detections</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">detections_count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv426ifx_usecase_get_detections18ifx_usecase_handlePPK13ifx_detectionP8uint32_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a pointer to a list of detection events. </p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#structifx__detection"><span class="std std-ref">ifx_detection</span></a></p>
+</div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The event is only valid until the next call to ifx_usecase_process. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>detections</strong> – <strong>[out]</strong> A pointer to a pointer of type <a class="reference internal" href="#structifx__detection"><span class="std std-ref">ifx_detection</span></a>, which will point to the internal retrieved detection event structure. </p></li>
+<li><p><strong>detections_count</strong> – <strong>[out]</strong> Number of detections returned through detections pointer. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430ifx_usecase_get_presence_event18ifx_usecase_handlePPK18ifx_presence_event">
+<span id="_CPPv330ifx_usecase_get_presence_event18ifx_usecase_handlePPK18ifx_presence_event"></span><span id="_CPPv230ifx_usecase_get_presence_event18ifx_usecase_handlePPK18ifx_presence_event"></span><span id="ifx_usecase_get_presence_event__ifx_usecase_handle.ifx_presence_eventCPP"></span><span class="target" id="usecase__events_8h_1ad50cd19d85c4640602b811b8641ba40f"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_presence_event</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_presence_event" title="ifx_presence_event"><span class="n"><span class="pre">ifx_presence_event</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">presence_event</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430ifx_usecase_get_presence_event18ifx_usecase_handlePPK18ifx_presence_event" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a pointer to the presence event. </p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#structifx__presence__event"><span class="std std-ref">ifx_presence_event</span></a></p>
+</div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The event is only valid until the next call to ifx_usecase_process.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>presence_event</strong> – <strong>[out]</strong> A pointer to a pointer of type <a class="reference internal" href="#structifx__presence__event"><span class="std std-ref">ifx_presence_event</span></a>, which will point to the internal retrieved presence event structure. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv431ifx_usecase_get_tracking_events18ifx_usecase_handlePPK18ifx_tracking_eventP8uint32_t">
+<span id="_CPPv331ifx_usecase_get_tracking_events18ifx_usecase_handlePPK18ifx_tracking_eventP8uint32_t"></span><span id="_CPPv231ifx_usecase_get_tracking_events18ifx_usecase_handlePPK18ifx_tracking_eventP8uint32_t"></span><span id="ifx_usecase_get_tracking_events__ifx_usecase_handle.ifx_tracking_eventCPP.uint32_tP"></span><span class="target" id="usecase__events_8h_1af42455100263ca178a0c31d3b891dfcd"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_tracking_events</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_tracking_event" title="ifx_tracking_event"><span class="n"><span class="pre">ifx_tracking_event</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">tracking_events</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">tracking_events_count</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv431ifx_usecase_get_tracking_events18ifx_usecase_handlePPK18ifx_tracking_eventP8uint32_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets a pointer to a list of tracking events. </p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#structifx__tracking__event"><span class="std std-ref">ifx_tracking_event</span></a></p>
+</div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The event is only valid until the next call to ifx_usecase_process.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>tracking_events</strong> – <strong>[out]</strong> A pointer to a pointer of type <a class="reference internal" href="#structifx__tracking__event"><span class="std std-ref">ifx_tracking_event</span></a>, which will point to the internal retrieved tracking event structure. </p></li>
+<li><p><strong>tracking_events_count</strong> – <strong>[out]</strong> Number of events returned through tracking_events pointer. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv418ifx_tracking_event">
+<span id="_CPPv318ifx_tracking_event"></span><span id="_CPPv218ifx_tracking_event"></span><span id="ifx_tracking_event"></span><span class="target" id="structifx__tracking__event"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_tracking_event</span></span></span><a class="headerlink" href="#_CPPv418ifx_tracking_event" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_events.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event5rangeE">
+<span id="_CPPv3N18ifx_tracking_event5rangeE"></span><span id="_CPPv2N18ifx_tracking_event5rangeE"></span><span id="ifx_tracking_event::range__float"></span><span class="target" id="structifx__tracking__event_1a3930d1e8af0848833f4de0e0e9517dca"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">range</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event5rangeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event7azimuthE">
+<span id="_CPPv3N18ifx_tracking_event7azimuthE"></span><span id="_CPPv2N18ifx_tracking_event7azimuthE"></span><span id="ifx_tracking_event::azimuth__float"></span><span class="target" id="structifx__tracking__event_1a01b03ebfa7d0a95760e743f611fecbc5"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">azimuth</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event7azimuthE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event9elevationE">
+<span id="_CPPv3N18ifx_tracking_event9elevationE"></span><span id="_CPPv2N18ifx_tracking_event9elevationE"></span><span id="ifx_tracking_event::elevation__float"></span><span class="target" id="structifx__tracking__event_1a1c921d7f2f6a29b15d709c49d2df1797"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">elevation</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event9elevationE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event5speedE">
+<span id="_CPPv3N18ifx_tracking_event5speedE"></span><span id="_CPPv2N18ifx_tracking_event5speedE"></span><span id="ifx_tracking_event::speed__float"></span><span class="target" id="structifx__tracking__event_1a7f7e4724cf57d59513b39c5ecc81adc8"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">speed</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event5speedE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event7dopplerE">
+<span id="_CPPv3N18ifx_tracking_event7dopplerE"></span><span id="_CPPv2N18ifx_tracking_event7dopplerE"></span><span id="ifx_tracking_event::doppler__float"></span><span class="target" id="structifx__tracking__event_1a8cb5504a6b49c04105d1e4a31d56de7e"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">doppler</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event7dopplerE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event8activityE">
+<span id="_CPPv3N18ifx_tracking_event8activityE"></span><span id="_CPPv2N18ifx_tracking_event8activityE"></span><span id="ifx_tracking_event::activity__float"></span><span class="target" id="structifx__tracking__event_1a4c4db87697fe86d7a366ef05e30426ab"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">activity</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event8activityE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event9is_staticE">
+<span id="_CPPv3N18ifx_tracking_event9is_staticE"></span><span id="_CPPv2N18ifx_tracking_event9is_staticE"></span><span id="ifx_tracking_event::is_static__b"></span><span class="target" id="structifx__tracking__event_1a304fbadb59a0f16927a48adfff3dd25f"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_static</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event9is_staticE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event2idE">
+<span id="_CPPv3N18ifx_tracking_event2idE"></span><span id="_CPPv2N18ifx_tracking_event2idE"></span><span id="ifx_tracking_event::id__uint32_t"></span><span class="target" id="structifx__tracking__event_1abaabdc509cdaba7df9f56c6c76f3ae19"></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event2idE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_tracking_event10confidenceE">
+<span id="_CPPv3N18ifx_tracking_event10confidenceE"></span><span id="_CPPv2N18ifx_tracking_event10confidenceE"></span><span id="ifx_tracking_event::confidence__float"></span><span class="target" id="structifx__tracking__event_1a058b8558da894ebfbef73d1a9b57deaa"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">confidence</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_tracking_event10confidenceE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv413ifx_detection">
+<span id="_CPPv313ifx_detection"></span><span id="_CPPv213ifx_detection"></span><span id="ifx_detection"></span><span class="target" id="structifx__detection"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_detection</span></span></span><a class="headerlink" href="#_CPPv413ifx_detection" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_events.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ifx_detection5rangeE">
+<span id="_CPPv3N13ifx_detection5rangeE"></span><span id="_CPPv2N13ifx_detection5rangeE"></span><span id="ifx_detection::range__float"></span><span class="target" id="structifx__detection_1a3930d1e8af0848833f4de0e0e9517dca"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">range</span></span></span><a class="headerlink" href="#_CPPv4N13ifx_detection5rangeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ifx_detection7azimuthE">
+<span id="_CPPv3N13ifx_detection7azimuthE"></span><span id="_CPPv2N13ifx_detection7azimuthE"></span><span id="ifx_detection::azimuth__float"></span><span class="target" id="structifx__detection_1a01b03ebfa7d0a95760e743f611fecbc5"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">azimuth</span></span></span><a class="headerlink" href="#_CPPv4N13ifx_detection7azimuthE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ifx_detection9elevationE">
+<span id="_CPPv3N13ifx_detection9elevationE"></span><span id="_CPPv2N13ifx_detection9elevationE"></span><span id="ifx_detection::elevation__float"></span><span class="target" id="structifx__detection_1a1c921d7f2f6a29b15d709c49d2df1797"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">elevation</span></span></span><a class="headerlink" href="#_CPPv4N13ifx_detection9elevationE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ifx_detection7dopplerE">
+<span id="_CPPv3N13ifx_detection7dopplerE"></span><span id="_CPPv2N13ifx_detection7dopplerE"></span><span id="ifx_detection::doppler__float"></span><span class="target" id="structifx__detection_1a8cb5504a6b49c04105d1e4a31d56de7e"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">doppler</span></span></span><a class="headerlink" href="#_CPPv4N13ifx_detection7dopplerE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ifx_detection9magnitudeE">
+<span id="_CPPv3N13ifx_detection9magnitudeE"></span><span id="_CPPv2N13ifx_detection9magnitudeE"></span><span id="ifx_detection::magnitude__float"></span><span class="target" id="structifx__detection_1a90598eb01c338f4bbab41ad4aab9fcc0"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">magnitude</span></span></span><a class="headerlink" href="#_CPPv4N13ifx_detection9magnitudeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N13ifx_detection4typeE">
+<span id="_CPPv3N13ifx_detection4typeE"></span><span id="_CPPv2N13ifx_detection4typeE"></span><span id="ifx_detection::type__ifx_detection_type"></span><span class="target" id="structifx__detection_1a29654bc23923cb77f3ce6e5a787fd38e"></span><a class="reference internal" href="#_CPPv418ifx_detection_type" title="ifx_detection_type"><span class="n"><span class="pre">ifx_detection_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">type</span></span></span><a class="headerlink" href="#_CPPv4N13ifx_detection4typeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv418ifx_presence_event">
+<span id="_CPPv318ifx_presence_event"></span><span id="_CPPv218ifx_presence_event"></span><span id="ifx_presence_event"></span><span class="target" id="structifx__presence__event"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_presence_event</span></span></span><a class="headerlink" href="#_CPPv418ifx_presence_event" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_events.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_presence_event5stateE">
+<span id="_CPPv3N18ifx_presence_event5stateE"></span><span id="_CPPv2N18ifx_presence_event5stateE"></span><span id="ifx_presence_event::state__b"></span><span class="target" id="structifx__presence__event_1ab30ba07e2a0bd07a15e45a92c32db9c5"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">state</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_presence_event5stateE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18ifx_presence_event10confidenceE">
+<span id="_CPPv3N18ifx_presence_event10confidenceE"></span><span id="_CPPv2N18ifx_presence_event10confidenceE"></span><span id="ifx_presence_event::confidence__float"></span><span class="target" id="structifx__presence__event_1a058b8558da894ebfbef73d1a9b57deaa"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">confidence</span></span></span><a class="headerlink" href="#_CPPv4N18ifx_presence_event10confidenceE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv415ifx_event_flags">
+<span id="_CPPv315ifx_event_flags"></span><span id="_CPPv215ifx_event_flags"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09e"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_event_flags</span></span></span><a class="headerlink" href="#_CPPv415ifx_event_flags" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N15ifx_event_flags19IFX_EVENT_FLAG_NONEE">
+<span id="_CPPv3N15ifx_event_flags19IFX_EVENT_FLAG_NONEE"></span><span id="_CPPv2N15ifx_event_flags19IFX_EVENT_FLAG_NONEE"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09eaddc8ec49e1d4a7fa5303411870993330"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_EVENT_FLAG_NONE</span></span></span><a class="headerlink" href="#_CPPv4N15ifx_event_flags19IFX_EVENT_FLAG_NONEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N15ifx_event_flags23IFX_EVENT_FLAG_PRESENCEE">
+<span id="_CPPv3N15ifx_event_flags23IFX_EVENT_FLAG_PRESENCEE"></span><span id="_CPPv2N15ifx_event_flags23IFX_EVENT_FLAG_PRESENCEE"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09eaaef20c56101a7fef830faccf902f908a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_EVENT_FLAG_PRESENCE</span></span></span><a class="headerlink" href="#_CPPv4N15ifx_event_flags23IFX_EVENT_FLAG_PRESENCEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N15ifx_event_flags21IFX_EVENT_FLAG_ZONINGE">
+<span id="_CPPv3N15ifx_event_flags21IFX_EVENT_FLAG_ZONINGE"></span><span id="_CPPv2N15ifx_event_flags21IFX_EVENT_FLAG_ZONINGE"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09ea64a36fa9d98a0d097a221b0239b6753b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_EVENT_FLAG_ZONING</span></span></span><a class="headerlink" href="#_CPPv4N15ifx_event_flags21IFX_EVENT_FLAG_ZONINGE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N15ifx_event_flags23IFX_EVENT_FLAG_TRACKINGE">
+<span id="_CPPv3N15ifx_event_flags23IFX_EVENT_FLAG_TRACKINGE"></span><span id="_CPPv2N15ifx_event_flags23IFX_EVENT_FLAG_TRACKINGE"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09ea324f8b083457e041a7c32ead0492fa78"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_EVENT_FLAG_TRACKING</span></span></span><a class="headerlink" href="#_CPPv4N15ifx_event_flags23IFX_EVENT_FLAG_TRACKINGE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N15ifx_event_flags25IFX_EVENT_FLAG_DETECTIONSE">
+<span id="_CPPv3N15ifx_event_flags25IFX_EVENT_FLAG_DETECTIONSE"></span><span id="_CPPv2N15ifx_event_flags25IFX_EVENT_FLAG_DETECTIONSE"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09ea35a91064da7df211e924cfdf7c7071b2"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_EVENT_FLAG_DETECTIONS</span></span></span><a class="headerlink" href="#_CPPv4N15ifx_event_flags25IFX_EVENT_FLAG_DETECTIONSE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N15ifx_event_flags18IFX_EVENT_FLAG_ALLE">
+<span id="_CPPv3N15ifx_event_flags18IFX_EVENT_FLAG_ALLE"></span><span id="_CPPv2N15ifx_event_flags18IFX_EVENT_FLAG_ALLE"></span><span class="target" id="usecase__events__serialize_8h_1a3a903be9560c2b9bd9008f7ea48aa09eab733160ac606a4bf8f5178da7a7cfa9b"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_EVENT_FLAG_ALL</span></span></span><a class="headerlink" href="#_CPPv4N15ifx_event_flags18IFX_EVENT_FLAG_ALLE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv415ifx_print_eventPc6size_t18ifx_usecase_handle15ifx_event_flags8uint32_t">
+<span id="_CPPv315ifx_print_eventPc6size_t18ifx_usecase_handle15ifx_event_flags8uint32_t"></span><span id="_CPPv215ifx_print_eventPc6size_t18ifx_usecase_handle15ifx_event_flags8uint32_t"></span><span id="ifx_print_event__cP.s.ifx_usecase_handle.ifx_event_flags.uint32_t"></span><span class="target" id="usecase__events__serialize_8h_1a9cd3356e10661f95f9203ad9e8abcb7c"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_print_event</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">json_buffer</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">json_buffer_size</span></span>, <a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <a class="reference internal" href="#_CPPv415ifx_event_flags" title="ifx_event_flags"><span class="n"><span class="pre">ifx_event_flags</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">events_flags</span></span>, <span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timestamp</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415ifx_print_eventPc6size_t18ifx_usecase_handle15ifx_event_flags8uint32_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Print events as JSONL format to a buffer. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_buffer</strong> – Output buffer </p></li>
+<li><p><strong>json_buffer_size</strong> – Output buffer size </p></li>
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>events_flags</strong> – Event flags that shall be written to the output buffer </p></li>
+<li><p><strong>timestamp</strong> – Timestamp in milliseconds </p></li>
+<li><p><strong>elapsed_time</strong> – Elapsed time for the use-case processing in milliseconds </p></li>
+<li><p><strong>frames_dropped</strong> – Dropped frames since last use-case processing </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>IFX_USECASE_API </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><code class="docutils literal notranslate"><span class="pre">IFX_EVENT_FLAG_ZONING</span></code> is defined in <code class="docutils literal notranslate"><span class="pre">ifx_event_flags</span></code> but is reserved for future use.
+No corresponding getter exists in the current API; do not test for this flag.</p>
+</div>
+</section>
+<section id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Link to this heading"></a></h2>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-enums">Enums</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv428ifx_usecase_settings_error_t">
+<span id="_CPPv328ifx_usecase_settings_error_t"></span><span id="_CPPv228ifx_usecase_settings_error_t"></span><span class="target" id="usecase__settings_8h_1ad28b193c9ca457a6bff82052998ce912"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></span><a class="headerlink" href="#_CPPv428ifx_usecase_settings_error_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Presence Detection and Tracking Use-Case Settings Configuration settings for presence detection and tracking use case </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N28ifx_usecase_settings_error_t23IFX_USECASE_SETTINGS_OKE">
+<span id="_CPPv3N28ifx_usecase_settings_error_t23IFX_USECASE_SETTINGS_OKE"></span><span id="_CPPv2N28ifx_usecase_settings_error_t23IFX_USECASE_SETTINGS_OKE"></span><span class="target" id="usecase__settings_8h_1ad28b193c9ca457a6bff82052998ce912a5e2677cb633069ff13701df95a220078"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_OK</span></span></span><a class="headerlink" href="#_CPPv4N28ifx_usecase_settings_error_t23IFX_USECASE_SETTINGS_OKE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_OUT_OF_RANGEE">
+<span id="_CPPv3N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_OUT_OF_RANGEE"></span><span id="_CPPv2N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_OUT_OF_RANGEE"></span><span class="target" id="usecase__settings_8h_1ad28b193c9ca457a6bff82052998ce912a87fce8896e51493e49f374498966f1e8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_ERROR_OUT_OF_RANGE</span></span></span><a class="headerlink" href="#_CPPv4N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_OUT_OF_RANGEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N28ifx_usecase_settings_error_t40IFX_USECASE_SETTINGS_ERROR_INVALID_VALUEE">
+<span id="_CPPv3N28ifx_usecase_settings_error_t40IFX_USECASE_SETTINGS_ERROR_INVALID_VALUEE"></span><span id="_CPPv2N28ifx_usecase_settings_error_t40IFX_USECASE_SETTINGS_ERROR_INVALID_VALUEE"></span><span class="target" id="usecase__settings_8h_1ad28b193c9ca457a6bff82052998ce912abcc330ef1f28fdb1db8e70792027595f"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_ERROR_INVALID_VALUE</span></span></span><a class="headerlink" href="#_CPPv4N28ifx_usecase_settings_error_t40IFX_USECASE_SETTINGS_ERROR_INVALID_VALUEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_NULL_POINTERE">
+<span id="_CPPv3N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_NULL_POINTERE"></span><span id="_CPPv2N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_NULL_POINTERE"></span><span class="target" id="usecase__settings_8h_1ad28b193c9ca457a6bff82052998ce912aded54db9f61b9a3ab7e17b01d6ea4cd8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_ERROR_NULL_POINTER</span></span></span><a class="headerlink" href="#_CPPv4N28ifx_usecase_settings_error_t39IFX_USECASE_SETTINGS_ERROR_NULL_POINTERE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv453ifx_usecase_settings_sensor_mounting_orientation_tx_t">
+<span id="_CPPv353ifx_usecase_settings_sensor_mounting_orientation_tx_t"></span><span id="_CPPv253ifx_usecase_settings_sensor_mounting_orientation_tx_t"></span><span class="target" id="usecase__settings_8h_1a0f736763bc6b3adf77e11d9e0670f4fd"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_orientation_tx_t</span></span></span><a class="headerlink" href="#_CPPv453ifx_usecase_settings_sensor_mounting_orientation_tx_t" title="Link to this definition"></a><br /></dt>
+<dd><p>TX Antenna Orientation Transmit antenna orientation configuration Type: enum Default: 0 Enum: TopLeft=0, BottomLeft=1, TopRight=2, BottomRight=3 </p>
+<p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t59IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPLEFTE">
+<span id="_CPPv3N53ifx_usecase_settings_sensor_mounting_orientation_tx_t59IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPLEFTE"></span><span id="_CPPv2N53ifx_usecase_settings_sensor_mounting_orientation_tx_t59IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPLEFTE"></span><span class="target" id="usecase__settings_8h_1a0f736763bc6b3adf77e11d9e0670f4fda8d44c39feb50e21da63f2655a68fe9d1"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPLEFT</span></span></span><a class="headerlink" href="#_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t59IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPLEFTE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t62IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMLEFTE">
+<span id="_CPPv3N53ifx_usecase_settings_sensor_mounting_orientation_tx_t62IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMLEFTE"></span><span id="_CPPv2N53ifx_usecase_settings_sensor_mounting_orientation_tx_t62IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMLEFTE"></span><span class="target" id="usecase__settings_8h_1a0f736763bc6b3adf77e11d9e0670f4fda643e407e400265b2b00b29ef0d8e8977"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMLEFT</span></span></span><a class="headerlink" href="#_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t62IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMLEFTE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t60IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPRIGHTE">
+<span id="_CPPv3N53ifx_usecase_settings_sensor_mounting_orientation_tx_t60IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPRIGHTE"></span><span id="_CPPv2N53ifx_usecase_settings_sensor_mounting_orientation_tx_t60IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPRIGHTE"></span><span class="target" id="usecase__settings_8h_1a0f736763bc6b3adf77e11d9e0670f4fda44b5157df0879720c065881a9e63f6f9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPRIGHT</span></span></span><a class="headerlink" href="#_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t60IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_TOPRIGHTE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t63IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMRIGHTE">
+<span id="_CPPv3N53ifx_usecase_settings_sensor_mounting_orientation_tx_t63IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMRIGHTE"></span><span id="_CPPv2N53ifx_usecase_settings_sensor_mounting_orientation_tx_t63IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMRIGHTE"></span><span class="target" id="usecase__settings_8h_1a0f736763bc6b3adf77e11d9e0670f4fda4c1ff7339f74ade47a4239cfdcd83a79"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMRIGHT</span></span></span><a class="headerlink" href="#_CPPv4N53ifx_usecase_settings_sensor_mounting_orientation_tx_t63IFX_USECASE_SETTINGS_SENSOR_MOUNTING_ORIENTATION_TX_BOTTOMRIGHTE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv433ifx_usecase_settings_get_settingsPK18ifx_usecase_config">
+<span id="_CPPv333ifx_usecase_settings_get_settingsPK18ifx_usecase_config"></span><span id="_CPPv233ifx_usecase_settings_get_settingsPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_settings__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1aae1b8e7e63d11f2d200f40a4cb179c6d"></span><a class="reference internal" href="#_CPPv422ifx_usecase_settings_t" title="ifx_usecase_settings_t"><span class="n"><span class="pre">ifx_usecase_settings_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_settings</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv433ifx_usecase_settings_get_settingsPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Presence Detection and Tracking Use-Case Settings Configuration settings for presence detection and tracking use case Type: group </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv433ifx_usecase_settings_set_settingsP18ifx_usecase_configPK22ifx_usecase_settings_t">
+<span id="_CPPv333ifx_usecase_settings_set_settingsP18ifx_usecase_configPK22ifx_usecase_settings_t"></span><span id="_CPPv233ifx_usecase_settings_set_settingsP18ifx_usecase_configPK22ifx_usecase_settings_t"></span><span id="ifx_usecase_settings_set_settings__ifx_usecase_configP.ifx_usecase_settings_tCP"></span><span class="target" id="usecase__settings_8h_1ae57c10e57d11918517a91edcb286de48"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_settings</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv422ifx_usecase_settings_t" title="ifx_usecase_settings_t"><span class="n"><span class="pre">ifx_usecase_settings_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv433ifx_usecase_settings_set_settingsP18ifx_usecase_configPK22ifx_usecase_settings_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv440ifx_usecase_settings_get_sensor_mountingPK18ifx_usecase_config">
+<span id="_CPPv340ifx_usecase_settings_get_sensor_mountingPK18ifx_usecase_config"></span><span id="_CPPv240ifx_usecase_settings_get_sensor_mountingPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_sensor_mounting__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1aeaedfc516f8e2f4ced983a6a14ccda2f"></span><a class="reference internal" href="#_CPPv438ifx_usecase_settings_sensor_mounting_t" title="ifx_usecase_settings_sensor_mounting_t"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_sensor_mounting</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv440ifx_usecase_settings_get_sensor_mountingPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Sensor Mounting Radar sensor mounting and orientation configuration Type: group </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv440ifx_usecase_settings_set_sensor_mountingP18ifx_usecase_configPK38ifx_usecase_settings_sensor_mounting_t">
+<span id="_CPPv340ifx_usecase_settings_set_sensor_mountingP18ifx_usecase_configPK38ifx_usecase_settings_sensor_mounting_t"></span><span id="_CPPv240ifx_usecase_settings_set_sensor_mountingP18ifx_usecase_configPK38ifx_usecase_settings_sensor_mounting_t"></span><span id="ifx_usecase_settings_set_sensor_mounting__ifx_usecase_configP.ifx_usecase_settings_sensor_mounting_tCP"></span><span class="target" id="usecase__settings_8h_1a238f03799ac2799310c56c1cc88f97be"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_sensor_mounting</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv438ifx_usecase_settings_sensor_mounting_t" title="ifx_usecase_settings_sensor_mounting_t"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv440ifx_usecase_settings_set_sensor_mountingP18ifx_usecase_configPK38ifx_usecase_settings_sensor_mounting_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv455ifx_usecase_settings_get_sensor_mounting_orientation_txPK18ifx_usecase_config">
+<span id="_CPPv355ifx_usecase_settings_get_sensor_mounting_orientation_txPK18ifx_usecase_config"></span><span id="_CPPv255ifx_usecase_settings_get_sensor_mounting_orientation_txPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_sensor_mounting_orientation_tx__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a63e955e9d0158a5daa65a829664a7ee1"></span><a class="reference internal" href="#_CPPv453ifx_usecase_settings_sensor_mounting_orientation_tx_t" title="ifx_usecase_settings_sensor_mounting_orientation_tx_t"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_orientation_tx_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_sensor_mounting_orientation_tx</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv455ifx_usecase_settings_get_sensor_mounting_orientation_txPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>TX Antenna Orientation Transmit antenna orientation configuration Type: enum Default: 0 Enum: TopLeft=0, BottomLeft=1, TopRight=2, BottomRight=3 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv455ifx_usecase_settings_set_sensor_mounting_orientation_txP18ifx_usecase_config53ifx_usecase_settings_sensor_mounting_orientation_tx_t">
+<span id="_CPPv355ifx_usecase_settings_set_sensor_mounting_orientation_txP18ifx_usecase_config53ifx_usecase_settings_sensor_mounting_orientation_tx_t"></span><span id="_CPPv255ifx_usecase_settings_set_sensor_mounting_orientation_txP18ifx_usecase_config53ifx_usecase_settings_sensor_mounting_orientation_tx_t"></span><span id="ifx_usecase_settings_set_sensor_mounting_orientation_tx__ifx_usecase_configP.ifx_usecase_settings_sensor_mounting_orientation_tx_t"></span><span class="target" id="usecase__settings_8h_1a9a03c994361908e81d672ba1f97f9e4b"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_sensor_mounting_orientation_tx</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <a class="reference internal" href="#_CPPv453ifx_usecase_settings_sensor_mounting_orientation_tx_t" title="ifx_usecase_settings_sensor_mounting_orientation_tx_t"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_orientation_tx_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv455ifx_usecase_settings_set_sensor_mounting_orientation_txP18ifx_usecase_config53ifx_usecase_settings_sensor_mounting_orientation_tx_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv455ifx_usecase_settings_get_sensor_mounting_tilt_angle_degPK18ifx_usecase_config">
+<span id="_CPPv355ifx_usecase_settings_get_sensor_mounting_tilt_angle_degPK18ifx_usecase_config"></span><span id="_CPPv255ifx_usecase_settings_get_sensor_mounting_tilt_angle_degPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_sensor_mounting_tilt_angle_deg__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a1944445ab0e9a4fb5accfd71d94660a8"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_sensor_mounting_tilt_angle_deg</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv455ifx_usecase_settings_get_sensor_mounting_tilt_angle_degPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Tilt Angle Radar tilt angle in degrees (positive is downward) Type: float Range: -45.0 to 45.0 Step: 0.5 Default: 0.0 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv455ifx_usecase_settings_set_sensor_mounting_tilt_angle_degP18ifx_usecase_configf">
+<span id="_CPPv355ifx_usecase_settings_set_sensor_mounting_tilt_angle_degP18ifx_usecase_configf"></span><span id="_CPPv255ifx_usecase_settings_set_sensor_mounting_tilt_angle_degP18ifx_usecase_configf"></span><span id="ifx_usecase_settings_set_sensor_mounting_tilt_angle_deg__ifx_usecase_configP.float"></span><span class="target" id="usecase__settings_8h_1aba13dd6b487f47fd6435b8a1772f266f"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_sensor_mounting_tilt_angle_deg</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv455ifx_usecase_settings_set_sensor_mounting_tilt_angle_degP18ifx_usecase_configf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv458ifx_usecase_settings_get_sensor_mounting_mounting_height_mPK18ifx_usecase_config">
+<span id="_CPPv358ifx_usecase_settings_get_sensor_mounting_mounting_height_mPK18ifx_usecase_config"></span><span id="_CPPv258ifx_usecase_settings_get_sensor_mounting_mounting_height_mPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_sensor_mounting_mounting_height_m__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a311b6514e5b4b698eb66b9b144393f97"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_sensor_mounting_mounting_height_m</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv458ifx_usecase_settings_get_sensor_mounting_mounting_height_mPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Mounting Height Radar mounting height above ground in meters Type: float Range: 0.5 to 5.0 Step: 0.1 Default: 1.5 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv458ifx_usecase_settings_set_sensor_mounting_mounting_height_mP18ifx_usecase_configf">
+<span id="_CPPv358ifx_usecase_settings_set_sensor_mounting_mounting_height_mP18ifx_usecase_configf"></span><span id="_CPPv258ifx_usecase_settings_set_sensor_mounting_mounting_height_mP18ifx_usecase_configf"></span><span id="ifx_usecase_settings_set_sensor_mounting_mounting_height_m__ifx_usecase_configP.float"></span><span class="target" id="usecase__settings_8h_1a5abb09779671feed919529046553f95b"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_sensor_mounting_mounting_height_m</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv458ifx_usecase_settings_set_sensor_mounting_mounting_height_mP18ifx_usecase_configf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428ifx_usecase_settings_get_fovPK18ifx_usecase_config">
+<span id="_CPPv328ifx_usecase_settings_get_fovPK18ifx_usecase_config"></span><span id="_CPPv228ifx_usecase_settings_get_fovPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1aa201a65024a5f0d8559b71f2d57552bd"></span><a class="reference internal" href="#_CPPv426ifx_usecase_settings_fov_t" title="ifx_usecase_settings_fov_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428ifx_usecase_settings_get_fovPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Field of View Field of view configuration for detection area Type: group </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428ifx_usecase_settings_set_fovP18ifx_usecase_configPK26ifx_usecase_settings_fov_t">
+<span id="_CPPv328ifx_usecase_settings_set_fovP18ifx_usecase_configPK26ifx_usecase_settings_fov_t"></span><span id="_CPPv228ifx_usecase_settings_set_fovP18ifx_usecase_configPK26ifx_usecase_settings_fov_t"></span><span id="ifx_usecase_settings_set_fov__ifx_usecase_configP.ifx_usecase_settings_fov_tCP"></span><span class="target" id="usecase__settings_8h_1adbc2de05150bff248fdbae94560cd91a"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv426ifx_usecase_settings_fov_t" title="ifx_usecase_settings_fov_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428ifx_usecase_settings_set_fovP18ifx_usecase_configPK26ifx_usecase_settings_fov_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv436ifx_usecase_settings_get_fov_range_mPK18ifx_usecase_config">
+<span id="_CPPv336ifx_usecase_settings_get_fov_range_mPK18ifx_usecase_config"></span><span id="_CPPv236ifx_usecase_settings_get_fov_range_mPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov_range_m__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a0a0c0e9287877ab971a2ed44e278edc8"></span><a class="reference internal" href="#_CPPv434ifx_usecase_settings_fov_range_m_t" title="ifx_usecase_settings_fov_range_m_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_range_m_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov_range_m</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv436ifx_usecase_settings_get_fov_range_mPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Range Range settings in meters Type: group </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv436ifx_usecase_settings_set_fov_range_mP18ifx_usecase_configPK34ifx_usecase_settings_fov_range_m_t">
+<span id="_CPPv336ifx_usecase_settings_set_fov_range_mP18ifx_usecase_configPK34ifx_usecase_settings_fov_range_m_t"></span><span id="_CPPv236ifx_usecase_settings_set_fov_range_mP18ifx_usecase_configPK34ifx_usecase_settings_fov_range_m_t"></span><span id="ifx_usecase_settings_set_fov_range_m__ifx_usecase_configP.ifx_usecase_settings_fov_range_m_tCP"></span><span class="target" id="usecase__settings_8h_1abc4d58b1ba34fb3b8b5a6aa33266ec59"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov_range_m</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv434ifx_usecase_settings_fov_range_m_t" title="ifx_usecase_settings_fov_range_m_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_range_m_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv436ifx_usecase_settings_set_fov_range_mP18ifx_usecase_configPK34ifx_usecase_settings_fov_range_m_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv440ifx_usecase_settings_get_fov_range_m_minPK18ifx_usecase_config">
+<span id="_CPPv340ifx_usecase_settings_get_fov_range_m_minPK18ifx_usecase_config"></span><span id="_CPPv240ifx_usecase_settings_get_fov_range_m_minPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov_range_m_min__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a6fb8e653ac784ab5d883782058a509b4"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov_range_m_min</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv440ifx_usecase_settings_get_fov_range_m_minPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Minimum Range Minimum detection range in meters Type: float Range: 0.0 to 20.0 Step: 0.001 Default: 0.0 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv440ifx_usecase_settings_set_fov_range_m_minP18ifx_usecase_configf">
+<span id="_CPPv340ifx_usecase_settings_set_fov_range_m_minP18ifx_usecase_configf"></span><span id="_CPPv240ifx_usecase_settings_set_fov_range_m_minP18ifx_usecase_configf"></span><span id="ifx_usecase_settings_set_fov_range_m_min__ifx_usecase_configP.float"></span><span class="target" id="usecase__settings_8h_1a3bf0d457454e805d9cd39daf8e871b93"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov_range_m_min</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv440ifx_usecase_settings_set_fov_range_m_minP18ifx_usecase_configf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv440ifx_usecase_settings_get_fov_range_m_maxPK18ifx_usecase_config">
+<span id="_CPPv340ifx_usecase_settings_get_fov_range_m_maxPK18ifx_usecase_config"></span><span id="_CPPv240ifx_usecase_settings_get_fov_range_m_maxPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov_range_m_max__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1abf29dd67ab38072745d8639d8a77990a"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov_range_m_max</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv440ifx_usecase_settings_get_fov_range_m_maxPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Maximum Range Maximum detection range in meters Type: float Range: 0.0 to 20.0 Step: 0.001 Default: 10.0 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv440ifx_usecase_settings_set_fov_range_m_maxP18ifx_usecase_configf">
+<span id="_CPPv340ifx_usecase_settings_set_fov_range_m_maxP18ifx_usecase_configf"></span><span id="_CPPv240ifx_usecase_settings_set_fov_range_m_maxP18ifx_usecase_configf"></span><span id="ifx_usecase_settings_set_fov_range_m_max__ifx_usecase_configP.float"></span><span class="target" id="usecase__settings_8h_1a1f675ee66f67b564e3fd690730245b1f"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov_range_m_max</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv440ifx_usecase_settings_set_fov_range_m_maxP18ifx_usecase_configf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv438ifx_usecase_settings_get_fov_angle_degPK18ifx_usecase_config">
+<span id="_CPPv338ifx_usecase_settings_get_fov_angle_degPK18ifx_usecase_config"></span><span id="_CPPv238ifx_usecase_settings_get_fov_angle_degPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov_angle_deg__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a7b6222de0dd05a46e3591142a7527646"></span><a class="reference internal" href="#_CPPv436ifx_usecase_settings_fov_angle_deg_t" title="ifx_usecase_settings_fov_angle_deg_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_angle_deg_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov_angle_deg</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv438ifx_usecase_settings_get_fov_angle_degPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Azimuth Angle Azimuth angle settings in degrees Type: group </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv438ifx_usecase_settings_set_fov_angle_degP18ifx_usecase_configPK36ifx_usecase_settings_fov_angle_deg_t">
+<span id="_CPPv338ifx_usecase_settings_set_fov_angle_degP18ifx_usecase_configPK36ifx_usecase_settings_fov_angle_deg_t"></span><span id="_CPPv238ifx_usecase_settings_set_fov_angle_degP18ifx_usecase_configPK36ifx_usecase_settings_fov_angle_deg_t"></span><span id="ifx_usecase_settings_set_fov_angle_deg__ifx_usecase_configP.ifx_usecase_settings_fov_angle_deg_tCP"></span><span class="target" id="usecase__settings_8h_1afcfef5e0ae1a1337d6f81019ec0d2c01"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov_angle_deg</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv436ifx_usecase_settings_fov_angle_deg_t" title="ifx_usecase_settings_fov_angle_deg_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_angle_deg_t</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv438ifx_usecase_settings_set_fov_angle_degP18ifx_usecase_configPK36ifx_usecase_settings_fov_angle_deg_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv442ifx_usecase_settings_get_fov_angle_deg_minPK18ifx_usecase_config">
+<span id="_CPPv342ifx_usecase_settings_get_fov_angle_deg_minPK18ifx_usecase_config"></span><span id="_CPPv242ifx_usecase_settings_get_fov_angle_deg_minPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov_angle_deg_min__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1ae0415c2e72e62323b5d156655d851a13"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov_angle_deg_min</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv442ifx_usecase_settings_get_fov_angle_deg_minPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Minimum Azimuth Angle Minimum azimuth angle in degrees (field of view) Type: float Range: -90.0 to 90.0 Step: 1.0 Default: -90.0 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv442ifx_usecase_settings_set_fov_angle_deg_minP18ifx_usecase_configf">
+<span id="_CPPv342ifx_usecase_settings_set_fov_angle_deg_minP18ifx_usecase_configf"></span><span id="_CPPv242ifx_usecase_settings_set_fov_angle_deg_minP18ifx_usecase_configf"></span><span id="ifx_usecase_settings_set_fov_angle_deg_min__ifx_usecase_configP.float"></span><span class="target" id="usecase__settings_8h_1af763d7bc2cffd1b8c4d5491a3e697882"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov_angle_deg_min</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv442ifx_usecase_settings_set_fov_angle_deg_minP18ifx_usecase_configf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv442ifx_usecase_settings_get_fov_angle_deg_maxPK18ifx_usecase_config">
+<span id="_CPPv342ifx_usecase_settings_get_fov_angle_deg_maxPK18ifx_usecase_config"></span><span id="_CPPv242ifx_usecase_settings_get_fov_angle_deg_maxPK18ifx_usecase_config"></span><span id="ifx_usecase_settings_get_fov_angle_deg_max__ifx_usecase_configCP"></span><span class="target" id="usecase__settings_8h_1a6784e88aa3776daafdb3b5514bd03d7b"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_get_fov_angle_deg_max</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv442ifx_usecase_settings_get_fov_angle_deg_maxPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Maximum Azimuth Angle Maximum azimuth angle in degrees (field of view) Type: float Range: -90.0 to 90.0 Step: 1.0 Default: 90.0 </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv442ifx_usecase_settings_set_fov_angle_deg_maxP18ifx_usecase_configf">
+<span id="_CPPv342ifx_usecase_settings_set_fov_angle_deg_maxP18ifx_usecase_configf"></span><span id="_CPPv242ifx_usecase_settings_set_fov_angle_deg_maxP18ifx_usecase_configf"></span><span id="ifx_usecase_settings_set_fov_angle_deg_max__ifx_usecase_configP.float"></span><span class="target" id="usecase__settings_8h_1a618ddc2ce27ea72939f26f705af7eb41"></span><a class="reference internal" href="#_CPPv428ifx_usecase_settings_error_t" title="ifx_usecase_settings_error_t"><span class="n"><span class="pre">ifx_usecase_settings_error_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_set_fov_angle_deg_max</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv442ifx_usecase_settings_set_fov_angle_deg_maxP18ifx_usecase_configf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv438ifx_usecase_settings_sensor_mounting_t">
+<span id="_CPPv338ifx_usecase_settings_sensor_mounting_t"></span><span id="_CPPv238ifx_usecase_settings_sensor_mounting_t"></span><span id="ifx_usecase_settings_sensor_mounting_t"></span><span class="target" id="structifx__usecase__settings__sensor__mounting__t"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_t</span></span></span><a class="headerlink" href="#_CPPv438ifx_usecase_settings_sensor_mounting_t" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_settings.h&gt;</em></div>
+<p>Sensor Mounting Radar sensor mounting and orientation configuration Type: group </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N38ifx_usecase_settings_sensor_mounting_t14orientation_txE">
+<span id="_CPPv3N38ifx_usecase_settings_sensor_mounting_t14orientation_txE"></span><span id="_CPPv2N38ifx_usecase_settings_sensor_mounting_t14orientation_txE"></span><span id="ifx_usecase_settings_sensor_mounting_t::orientation_tx__ifx_usecase_settings_sensor_mounting_orientation_tx_t"></span><span class="target" id="structifx__usecase__settings__sensor__mounting__t_1a37c13f3e73ab0af8e883261c058e5c07"></span><a class="reference internal" href="#_CPPv453ifx_usecase_settings_sensor_mounting_orientation_tx_t" title="ifx_usecase_settings_sensor_mounting_orientation_tx_t"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_orientation_tx_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">orientation_tx</span></span></span><a class="headerlink" href="#_CPPv4N38ifx_usecase_settings_sensor_mounting_t14orientation_txE" title="Link to this definition"></a><br /></dt>
+<dd><p>orientation_tx: TX Antenna Orientation Transmit antenna orientation configuration Type: enum Default: 0 Enum: TopLeft=0, BottomLeft=1, TopRight=2, BottomRight=3 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N38ifx_usecase_settings_sensor_mounting_t14tilt_angle_degE">
+<span id="_CPPv3N38ifx_usecase_settings_sensor_mounting_t14tilt_angle_degE"></span><span id="_CPPv2N38ifx_usecase_settings_sensor_mounting_t14tilt_angle_degE"></span><span id="ifx_usecase_settings_sensor_mounting_t::tilt_angle_deg__float"></span><span class="target" id="structifx__usecase__settings__sensor__mounting__t_1af90f1126b27f10e7577608cbc3434e41"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tilt_angle_deg</span></span></span><a class="headerlink" href="#_CPPv4N38ifx_usecase_settings_sensor_mounting_t14tilt_angle_degE" title="Link to this definition"></a><br /></dt>
+<dd><p>tilt_angle_deg: Tilt Angle Radar tilt angle in degrees (positive is downward) Type: float Range: -45.0 to 45.0 Step: 0.5 Default: 0.0 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N38ifx_usecase_settings_sensor_mounting_t17mounting_height_mE">
+<span id="_CPPv3N38ifx_usecase_settings_sensor_mounting_t17mounting_height_mE"></span><span id="_CPPv2N38ifx_usecase_settings_sensor_mounting_t17mounting_height_mE"></span><span id="ifx_usecase_settings_sensor_mounting_t::mounting_height_m__float"></span><span class="target" id="structifx__usecase__settings__sensor__mounting__t_1a0750e5b786c96c47b22edb95977966f0"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mounting_height_m</span></span></span><a class="headerlink" href="#_CPPv4N38ifx_usecase_settings_sensor_mounting_t17mounting_height_mE" title="Link to this definition"></a><br /></dt>
+<dd><p>mounting_height_m: Mounting Height Radar mounting height above ground in meters Type: float Range: 0.5 to 5.0 Step: 0.1 Default: 1.5 </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv434ifx_usecase_settings_fov_range_m_t">
+<span id="_CPPv334ifx_usecase_settings_fov_range_m_t"></span><span id="_CPPv234ifx_usecase_settings_fov_range_m_t"></span><span id="ifx_usecase_settings_fov_range_m_t"></span><span class="target" id="structifx__usecase__settings__fov__range__m__t"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_fov_range_m_t</span></span></span><a class="headerlink" href="#_CPPv434ifx_usecase_settings_fov_range_m_t" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_settings.h&gt;</em></div>
+<p>Range Range settings in meters Type: group </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N34ifx_usecase_settings_fov_range_m_t3minE">
+<span id="_CPPv3N34ifx_usecase_settings_fov_range_m_t3minE"></span><span id="_CPPv2N34ifx_usecase_settings_fov_range_m_t3minE"></span><span id="ifx_usecase_settings_fov_range_m_t::min__float"></span><span class="target" id="structifx__usecase__settings__fov__range__m__t_1ad2e88d75f808e6d4e78d48bceb10c336"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><a class="headerlink" href="#_CPPv4N34ifx_usecase_settings_fov_range_m_t3minE" title="Link to this definition"></a><br /></dt>
+<dd><p>min: Minimum Range Minimum detection range in meters Type: float Range: 0.0 to 20.0 Step: 0.001 Default: 0.0 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N34ifx_usecase_settings_fov_range_m_t3maxE">
+<span id="_CPPv3N34ifx_usecase_settings_fov_range_m_t3maxE"></span><span id="_CPPv2N34ifx_usecase_settings_fov_range_m_t3maxE"></span><span id="ifx_usecase_settings_fov_range_m_t::max__float"></span><span class="target" id="structifx__usecase__settings__fov__range__m__t_1a306b5ca364bf842a8ff5bbfc0b4d4a4b"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><a class="headerlink" href="#_CPPv4N34ifx_usecase_settings_fov_range_m_t3maxE" title="Link to this definition"></a><br /></dt>
+<dd><p>max: Maximum Range Maximum detection range in meters Type: float Range: 0.0 to 20.0 Step: 0.001 Default: 10.0 </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv436ifx_usecase_settings_fov_angle_deg_t">
+<span id="_CPPv336ifx_usecase_settings_fov_angle_deg_t"></span><span id="_CPPv236ifx_usecase_settings_fov_angle_deg_t"></span><span id="ifx_usecase_settings_fov_angle_deg_t"></span><span class="target" id="structifx__usecase__settings__fov__angle__deg__t"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_fov_angle_deg_t</span></span></span><a class="headerlink" href="#_CPPv436ifx_usecase_settings_fov_angle_deg_t" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_settings.h&gt;</em></div>
+<p>Azimuth Angle Azimuth angle settings in degrees Type: group </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N36ifx_usecase_settings_fov_angle_deg_t3minE">
+<span id="_CPPv3N36ifx_usecase_settings_fov_angle_deg_t3minE"></span><span id="_CPPv2N36ifx_usecase_settings_fov_angle_deg_t3minE"></span><span id="ifx_usecase_settings_fov_angle_deg_t::min__float"></span><span class="target" id="structifx__usecase__settings__fov__angle__deg__t_1ad2e88d75f808e6d4e78d48bceb10c336"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">min</span></span></span><a class="headerlink" href="#_CPPv4N36ifx_usecase_settings_fov_angle_deg_t3minE" title="Link to this definition"></a><br /></dt>
+<dd><p>min: Minimum Azimuth Angle Minimum azimuth angle in degrees (field of view) Type: float Range: -90.0 to 90.0 Step: 1.0 Default: -90.0 </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N36ifx_usecase_settings_fov_angle_deg_t3maxE">
+<span id="_CPPv3N36ifx_usecase_settings_fov_angle_deg_t3maxE"></span><span id="_CPPv2N36ifx_usecase_settings_fov_angle_deg_t3maxE"></span><span id="ifx_usecase_settings_fov_angle_deg_t::max__float"></span><span class="target" id="structifx__usecase__settings__fov__angle__deg__t_1a306b5ca364bf842a8ff5bbfc0b4d4a4b"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">max</span></span></span><a class="headerlink" href="#_CPPv4N36ifx_usecase_settings_fov_angle_deg_t3maxE" title="Link to this definition"></a><br /></dt>
+<dd><p>max: Maximum Azimuth Angle Maximum azimuth angle in degrees (field of view) Type: float Range: -90.0 to 90.0 Step: 1.0 Default: 90.0 </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv426ifx_usecase_settings_fov_t">
+<span id="_CPPv326ifx_usecase_settings_fov_t"></span><span id="_CPPv226ifx_usecase_settings_fov_t"></span><span id="ifx_usecase_settings_fov_t"></span><span class="target" id="structifx__usecase__settings__fov__t"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_fov_t</span></span></span><a class="headerlink" href="#_CPPv426ifx_usecase_settings_fov_t" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_settings.h&gt;</em></div>
+<p>Field of View Field of view configuration for detection area Type: group </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N26ifx_usecase_settings_fov_t7range_mE">
+<span id="_CPPv3N26ifx_usecase_settings_fov_t7range_mE"></span><span id="_CPPv2N26ifx_usecase_settings_fov_t7range_mE"></span><span id="ifx_usecase_settings_fov_t::range_m__ifx_usecase_settings_fov_range_m_t"></span><span class="target" id="structifx__usecase__settings__fov__t_1a9fb5f9db745422dede259007c978bb67"></span><a class="reference internal" href="#_CPPv434ifx_usecase_settings_fov_range_m_t" title="ifx_usecase_settings_fov_range_m_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_range_m_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">range_m</span></span></span><a class="headerlink" href="#_CPPv4N26ifx_usecase_settings_fov_t7range_mE" title="Link to this definition"></a><br /></dt>
+<dd><p>range_m: Range Range settings in meters Type: group </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N26ifx_usecase_settings_fov_t9angle_degE">
+<span id="_CPPv3N26ifx_usecase_settings_fov_t9angle_degE"></span><span id="_CPPv2N26ifx_usecase_settings_fov_t9angle_degE"></span><span id="ifx_usecase_settings_fov_t::angle_deg__ifx_usecase_settings_fov_angle_deg_t"></span><span class="target" id="structifx__usecase__settings__fov__t_1a602864b83d988d1162a88584ef453ad2"></span><a class="reference internal" href="#_CPPv436ifx_usecase_settings_fov_angle_deg_t" title="ifx_usecase_settings_fov_angle_deg_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_angle_deg_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">angle_deg</span></span></span><a class="headerlink" href="#_CPPv4N26ifx_usecase_settings_fov_t9angle_degE" title="Link to this definition"></a><br /></dt>
+<dd><p>angle_deg: Azimuth Angle Azimuth angle settings in degrees Type: group </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv422ifx_usecase_settings_t">
+<span id="_CPPv322ifx_usecase_settings_t"></span><span id="_CPPv222ifx_usecase_settings_t"></span><span id="ifx_usecase_settings_t"></span><span class="target" id="structifx__usecase__settings__t"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_t</span></span></span><a class="headerlink" href="#_CPPv422ifx_usecase_settings_t" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;usecase_settings.h&gt;</em></div>
+<p>Presence Detection and Tracking Use-Case Settings Configuration settings for presence detection and tracking use case Type: group </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22ifx_usecase_settings_t15sensor_mountingE">
+<span id="_CPPv3N22ifx_usecase_settings_t15sensor_mountingE"></span><span id="_CPPv2N22ifx_usecase_settings_t15sensor_mountingE"></span><span id="ifx_usecase_settings_t::sensor_mounting__ifx_usecase_settings_sensor_mounting_t"></span><span class="target" id="structifx__usecase__settings__t_1ad26430219b3e8243a74f81cde6c92bfb"></span><a class="reference internal" href="#_CPPv438ifx_usecase_settings_sensor_mounting_t" title="ifx_usecase_settings_sensor_mounting_t"><span class="n"><span class="pre">ifx_usecase_settings_sensor_mounting_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sensor_mounting</span></span></span><a class="headerlink" href="#_CPPv4N22ifx_usecase_settings_t15sensor_mountingE" title="Link to this definition"></a><br /></dt>
+<dd><p>sensor_mounting: Sensor Mounting Radar sensor mounting and orientation configuration Type: group </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22ifx_usecase_settings_t3fovE">
+<span id="_CPPv3N22ifx_usecase_settings_t3fovE"></span><span id="_CPPv2N22ifx_usecase_settings_t3fovE"></span><span id="ifx_usecase_settings_t::fov__ifx_usecase_settings_fov_t"></span><span class="target" id="structifx__usecase__settings__t_1a06be97fd8e8b47f890371b055d927b8a"></span><a class="reference internal" href="#_CPPv426ifx_usecase_settings_fov_t" title="ifx_usecase_settings_fov_t"><span class="n"><span class="pre">ifx_usecase_settings_fov_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fov</span></span></span><a class="headerlink" href="#_CPPv4N22ifx_usecase_settings_t3fovE" title="Link to this definition"></a><br /></dt>
+<dd><p>fov: Field of View Field of view configuration for detection area Type: group </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv432ifx_usecase_settings_schema_jsonv">
+<span id="_CPPv332ifx_usecase_settings_schema_jsonv"></span><span id="_CPPv232ifx_usecase_settings_schema_jsonv"></span><span id="ifx_usecase_settings_schema_json__void"></span><span class="target" id="usecase__settings__serialize_8h_1a889866c7d78366aef05f8eaadc0188a4"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_schema_json</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432ifx_usecase_settings_schema_jsonv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the JSON schema for the user-configurable settings. </p>
+<p>The returned string is a null-terminated, statically allocated JSON Schema document describing all user-configurable settings and their constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Null-terminated JSON Schema string. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430ifx_usecase_settings_serializePK18ifx_usecase_configPc6size_t">
+<span id="_CPPv330ifx_usecase_settings_serializePK18ifx_usecase_configPc6size_t"></span><span id="_CPPv230ifx_usecase_settings_serializePK18ifx_usecase_configPc6size_t"></span><span id="ifx_usecase_settings_serialize__ifx_usecase_configCP.cP.s"></span><span class="target" id="usecase__settings__serialize_8h_1a91bc80630bad2d1a78c32ba2f4d7f122"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_serialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">json_buffer</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">json_buffer_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430ifx_usecase_settings_serializePK18ifx_usecase_configPc6size_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Serializes the user settings to a JSON string. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – <strong>[in]</strong> Configuration whose settings to serialize. </p></li>
+<li><p><strong>json_buffer</strong> – <strong>[out]</strong> Buffer to write the JSON string into. </p></li>
+<li><p><strong>json_buffer_size</strong> – <strong>[in]</strong> Size of <code class="docutils literal notranslate"><span class="pre">json_buffer</span></code> in bytes. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true on success, false if the buffer is too small or serialization fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv432ifx_usecase_settings_deserializePKcP18ifx_usecase_config">
+<span id="_CPPv332ifx_usecase_settings_deserializePKcP18ifx_usecase_config"></span><span id="_CPPv232ifx_usecase_settings_deserializePKcP18ifx_usecase_config"></span><span id="ifx_usecase_settings_deserialize__cCP.ifx_usecase_configP"></span><span class="target" id="usecase__settings__serialize_8h_1a38bb08c831a3a9a51ab5f2c2f7006a2c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_settings_deserialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">json_str</span></span>, <a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432ifx_usecase_settings_deserializePKcP18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Deserializes a JSON string into the user settings of a configuration. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_str</strong> – <strong>[in]</strong> JSON string to parse. </p></li>
+<li><p><strong>config</strong> – <strong>[out]</strong> Configuration whose settings are populated from <code class="docutils literal notranslate"><span class="pre">json_str</span></code>. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true on success, false if parsing fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="main-api">
+<h2>Main API<a class="headerlink" href="#main-api" title="Link to this heading"></a></h2>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv421ifx_usecase_constants">
+<span id="_CPPv321ifx_usecase_constants"></span><span id="_CPPv221ifx_usecase_constants"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacf"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_constants</span></span></span><a class="headerlink" href="#_CPPv421ifx_usecase_constants" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_TX_ANTENNASE">
+<span id="_CPPv3N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_TX_ANTENNASE"></span><span id="_CPPv2N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_TX_ANTENNASE"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacfa3cf151c764941cc4f7949ebcce4ee8bf"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_RADAR_FRAME_TX_ANTENNAS</span></span></span><a class="headerlink" href="#_CPPv4N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_TX_ANTENNASE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_RX_ANTENNASE">
+<span id="_CPPv3N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_RX_ANTENNASE"></span><span id="_CPPv2N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_RX_ANTENNASE"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacfa2163ca89c00ed682753a28698288fe37"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_RADAR_FRAME_RX_ANTENNAS</span></span></span><a class="headerlink" href="#_CPPv4N21ifx_usecase_constants35IFX_USECASE_RADAR_FRAME_RX_ANTENNASE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N21ifx_usecase_constants30IFX_USECASE_RADAR_FRAME_CHIRPSE">
+<span id="_CPPv3N21ifx_usecase_constants30IFX_USECASE_RADAR_FRAME_CHIRPSE"></span><span id="_CPPv2N21ifx_usecase_constants30IFX_USECASE_RADAR_FRAME_CHIRPSE"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacfa64e33cb4d6615d67b85cc9e23bccdd65"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_RADAR_FRAME_CHIRPS</span></span></span><a class="headerlink" href="#_CPPv4N21ifx_usecase_constants30IFX_USECASE_RADAR_FRAME_CHIRPSE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N21ifx_usecase_constants31IFX_USECASE_RADAR_FRAME_SAMPLESE">
+<span id="_CPPv3N21ifx_usecase_constants31IFX_USECASE_RADAR_FRAME_SAMPLESE"></span><span id="_CPPv2N21ifx_usecase_constants31IFX_USECASE_RADAR_FRAME_SAMPLESE"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacfa97b985d978ccba3b5497ee1156619d7a"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_RADAR_FRAME_SAMPLES</span></span></span><a class="headerlink" href="#_CPPv4N21ifx_usecase_constants31IFX_USECASE_RADAR_FRAME_SAMPLESE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N21ifx_usecase_constants37IFX_USECASE_RADAR_FRAME_TOTAL_SAMPLESE">
+<span id="_CPPv3N21ifx_usecase_constants37IFX_USECASE_RADAR_FRAME_TOTAL_SAMPLESE"></span><span id="_CPPv2N21ifx_usecase_constants37IFX_USECASE_RADAR_FRAME_TOTAL_SAMPLESE"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacfa5f30e81163be90dd3a233b8144e609f9"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_RADAR_FRAME_TOTAL_SAMPLES</span></span></span><a class="headerlink" href="#_CPPv4N21ifx_usecase_constants37IFX_USECASE_RADAR_FRAME_TOTAL_SAMPLESE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N21ifx_usecase_constants28IFX_USECASE_RADAR_FRAME_SIZEE">
+<span id="_CPPv3N21ifx_usecase_constants28IFX_USECASE_RADAR_FRAME_SIZEE"></span><span id="_CPPv2N21ifx_usecase_constants28IFX_USECASE_RADAR_FRAME_SIZEE"></span><span class="target" id="usecase_8h_1a8b54c951e7d27296e84aea90e119cacfacc1624e9fb66acc1f86e9db5d2e527d8"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IFX_USECASE_RADAR_FRAME_SIZE</span></span></span><a class="headerlink" href="#_CPPv4N21ifx_usecase_constants28IFX_USECASE_RADAR_FRAME_SIZEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv423ifx_usecase_get_versionPPKcPPKcPPKcPPKc">
+<span id="_CPPv323ifx_usecase_get_versionPPKcPPKcPPKcPPKc"></span><span id="_CPPv223ifx_usecase_get_versionPPKcPPKcPPKcPPKc"></span><span id="ifx_usecase_get_version__cCPP.cCPP.cCPP.cCPP"></span><span class="target" id="usecase_8h_1a4243ed6e4c811a861c2828fc4e033dde"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_version</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">sem_ver</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">settings</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">build</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv423ifx_usecase_get_versionPPKcPPKcPPKcPPKc" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the version information of the use case. </p>
+<p>This function returns the version information of the use case, including the semantic version, name, settings, and build information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sem_ver</strong> – <strong>[out]</strong> The semantic version of the use case (e.g., “1.2.3”). </p></li>
+<li><p><strong>name</strong> – <strong>[out]</strong> The name of the use case. </p></li>
+<li><p><strong>settings</strong> – <strong>[out]</strong> The settings configuration name. </p></li>
+<li><p><strong>build</strong> – <strong>[out]</strong> The build information of the use case. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv437ifx_usecase_get_default_configurationP18ifx_usecase_config">
+<span id="_CPPv337ifx_usecase_get_default_configurationP18ifx_usecase_config"></span><span id="_CPPv237ifx_usecase_get_default_configurationP18ifx_usecase_config"></span><span id="ifx_usecase_get_default_configuration__ifx_usecase_configP"></span><span class="target" id="usecase_8h_1a491f9305b40825a1f9dae0d442ad0345"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_default_configuration</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cfg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv437ifx_usecase_get_default_configurationP18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the default configuration for a use case. </p>
+<p>This function returns the default configuration for a use case, which can be used as a starting point for customization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> – <strong>[out]</strong> The default configuration for the use case. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv416ifx_usecase_initPK18ifx_usecase_config">
+<span id="_CPPv316ifx_usecase_initPK18ifx_usecase_config"></span><span id="_CPPv216ifx_usecase_initPK18ifx_usecase_config"></span><span id="ifx_usecase_init__ifx_usecase_configCP"></span><span class="target" id="usecase_8h_1a6e9248740064ff2c8cb009559b411bac"></span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_init</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cfg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv416ifx_usecase_initPK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a use case with a given configuration. </p>
+<p>This function initializes a use case with the provided configuration. The configuration can be customized using the default configuration as a starting point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> – <strong>[in]</strong> The configuration for the use case. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A handle to the initialized use case </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv418ifx_usecase_deinitP18ifx_usecase_handle">
+<span id="_CPPv318ifx_usecase_deinitP18ifx_usecase_handle"></span><span id="_CPPv218ifx_usecase_deinitP18ifx_usecase_handle"></span><span id="ifx_usecase_deinit__ifx_usecase_handleP"></span><span class="target" id="usecase_8h_1aed71fcd0f339d1b82793e78963738b64"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_deinit</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">handle</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv418ifx_usecase_deinitP18ifx_usecase_handle" title="Link to this definition"></a><br /></dt>
+<dd><p>Deinitializes a use case. </p>
+<p>This function releases any resources allocated by the use case and deinitializes it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>handle</strong> – <strong>[inout]</strong> Usecase handle </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429ifx_usecase_get_configuration18ifx_usecase_handleP18ifx_usecase_config">
+<span id="_CPPv329ifx_usecase_get_configuration18ifx_usecase_handleP18ifx_usecase_config"></span><span id="_CPPv229ifx_usecase_get_configuration18ifx_usecase_handleP18ifx_usecase_config"></span><span id="ifx_usecase_get_configuration__ifx_usecase_handle.ifx_usecase_configP"></span><span class="target" id="usecase_8h_1a809cc9a4d43a0ad0b3b4048938c4babe"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_configuration</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cfg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429ifx_usecase_get_configuration18ifx_usecase_handleP18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Retrieves the current configuration of a use case. </p>
+<p>This function returns the current configuration of a use case, which can be used to inspect or modify the configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – <strong>[in]</strong> Usecase handle </p></li>
+<li><p><strong>cfg</strong> – <strong>[out]</strong> The current configuration of the use case. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429ifx_usecase_set_configuration18ifx_usecase_handlePK18ifx_usecase_config">
+<span id="_CPPv329ifx_usecase_set_configuration18ifx_usecase_handlePK18ifx_usecase_config"></span><span id="_CPPv229ifx_usecase_set_configuration18ifx_usecase_handlePK18ifx_usecase_config"></span><span id="ifx_usecase_set_configuration__ifx_usecase_handle.ifx_usecase_configCP"></span><span class="target" id="usecase_8h_1a04f19aec157e1876c7f8ec8551cf2714"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_set_configuration</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">cfg</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429ifx_usecase_set_configuration18ifx_usecase_handlePK18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the configuration of a use case. </p>
+<p>This function sets the configuration of a use case and reinitializes the pipeline with the new configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – <strong>[in]</strong> Usecase handle </p></li>
+<li><p><strong>cfg</strong> – <strong>[in]</strong> The configuration for the use case. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv419ifx_usecase_process18ifx_usecase_handlebPK8uint16_tP15ifx_event_flags">
+<span id="_CPPv319ifx_usecase_process18ifx_usecase_handlebPK8uint16_tP15ifx_event_flags"></span><span id="_CPPv219ifx_usecase_process18ifx_usecase_handlebPK8uint16_tP15ifx_event_flags"></span><span id="ifx_usecase_process__ifx_usecase_handle.b.uint16_tCP.ifx_event_flagsP"></span><span class="target" id="usecase_8h_1a006f8482f157b7c20f0848c1c9fb3012"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_process</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">reset</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">uint16_t</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">frame</span></span>, <a class="reference internal" href="#_CPPv415ifx_event_flags" title="ifx_event_flags"><span class="n"><span class="pre">ifx_event_flags</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">event_flags</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv419ifx_usecase_process18ifx_usecase_handlebPK8uint16_tP15ifx_event_flags" title="Link to this definition"></a><br /></dt>
+<dd><p>Process a radar frame. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>reset</strong> – True if the pipeline needs to be reset </p></li>
+<li><p><strong>frame</strong> – Radar frame </p></li>
+<li><p><strong>event_flags</strong> – <strong>[out]</strong> Event flags indicating what events occurred </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv432ifx_usecase_get_default_settingsP20ifx_usecase_settings">
+<span id="_CPPv332ifx_usecase_get_default_settingsP20ifx_usecase_settings"></span><span id="_CPPv232ifx_usecase_get_default_settingsP20ifx_usecase_settings"></span><span id="ifx_usecase_get_default_settings__ifx_usecase_settingsP"></span><span class="target" id="usecase_8h_1ae0bc0565ae4fa3f6930483f4b0736fcb"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_default_settings</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ifx_usecase_settings</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">settings</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv432ifx_usecase_get_default_settingsP20ifx_usecase_settings" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the default settings of the use case. </p>
+<p>Copies the default settings into the given settings structure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>settings</strong> – Settings structure </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424ifx_usecase_get_settings18ifx_usecase_handleP20ifx_usecase_settings">
+<span id="_CPPv324ifx_usecase_get_settings18ifx_usecase_handleP20ifx_usecase_settings"></span><span id="_CPPv224ifx_usecase_get_settings18ifx_usecase_handleP20ifx_usecase_settings"></span><span id="ifx_usecase_get_settings__ifx_usecase_handle.ifx_usecase_settingsP"></span><span class="target" id="usecase_8h_1ad9296e292cd5f3333fb04543482c0c6b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_get_settings</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="n"><span class="pre">ifx_usecase_settings</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">settings</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424ifx_usecase_get_settings18ifx_usecase_handleP20ifx_usecase_settings" title="Link to this definition"></a><br /></dt>
+<dd><p>Get current settings of the use case. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>settings</strong> – Settings </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv424ifx_usecase_set_settings18ifx_usecase_handlePK20ifx_usecase_settings">
+<span id="_CPPv324ifx_usecase_set_settings18ifx_usecase_handlePK20ifx_usecase_settings"></span><span id="_CPPv224ifx_usecase_set_settings18ifx_usecase_handlePK20ifx_usecase_settings"></span><span id="ifx_usecase_set_settings__ifx_usecase_handle.ifx_usecase_settingsCP"></span><span class="target" id="usecase_8h_1af7601da6cf9d427a0b7bbcb15317def3"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_set_settings</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv418ifx_usecase_handle" title="ifx_usecase_handle"><span class="n"><span class="pre">ifx_usecase_handle</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">handle</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">ifx_usecase_settings</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">settings</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv424ifx_usecase_set_settings18ifx_usecase_handlePK20ifx_usecase_settings" title="Link to this definition"></a><br /></dt>
+<dd><p>Set settings of the use case. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>handle</strong> – Usecase handle </p></li>
+<li><p><strong>settings</strong> – Settings </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>0 on success, a negative value on error. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv428ifx_usecase_config_serializePK18ifx_usecase_configPc6size_t">
+<span id="_CPPv328ifx_usecase_config_serializePK18ifx_usecase_configPc6size_t"></span><span id="_CPPv228ifx_usecase_config_serializePK18ifx_usecase_configPc6size_t"></span><span id="ifx_usecase_config_serialize__ifx_usecase_configCP.cP.s"></span><span class="target" id="usecase__config__serialize_8h_1aa573f42042bee8dcadf844e69defd0c1"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_config_serialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span>, <span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">json_buffer</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">json_buffer_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv428ifx_usecase_config_serializePK18ifx_usecase_configPc6size_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Serializes the use-case configuration to a JSON string. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> – <strong>[in]</strong> Configuration to serialize. </p></li>
+<li><p><strong>json_buffer</strong> – <strong>[out]</strong> Buffer to write the JSON string into. </p></li>
+<li><p><strong>json_buffer_size</strong> – <strong>[in]</strong> Size of <code class="docutils literal notranslate"><span class="pre">json_buffer</span></code> in bytes. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true on success, false if the buffer is too small or serialization fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv430ifx_usecase_config_deserializePKcP18ifx_usecase_config">
+<span id="_CPPv330ifx_usecase_config_deserializePKcP18ifx_usecase_config"></span><span id="_CPPv230ifx_usecase_config_deserializePKcP18ifx_usecase_config"></span><span id="ifx_usecase_config_deserialize__cCP.ifx_usecase_configP"></span><span class="target" id="usecase__config__serialize_8h_1afbdea1c0827b4c3ad79baeadbacbb78a"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ifx_usecase_config_deserialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">json_str</span></span>, <a class="reference internal" href="#_CPPv418ifx_usecase_config" title="ifx_usecase_config"><span class="n"><span class="pre">ifx_usecase_config</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">config</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv430ifx_usecase_config_deserializePKcP18ifx_usecase_config" title="Link to this definition"></a><br /></dt>
+<dd><p>Deserializes a JSON string into a use-case configuration. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>json_str</strong> – <strong>[in]</strong> JSON string to parse. </p></li>
+<li><p><strong>config</strong> – <strong>[out]</strong> Configuration populated from the JSON string. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>true on success, false if parsing fails. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="wrapper.html" class="btn btn-neutral float-left" title="C-Wrapper API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../embedded/index.html" class="btn btn-neutral float-right" title="Going embedded" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright - Infineon Technologies AG. Version 1.2.0 - 88ab146.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Algorithm &mdash; Presence Detection and Tracking 1.0.0 documentation</title>
+  <title>Algorithm &mdash; Presence Detection and Tracking 1.2.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/css/style.css?v=97d60ecb" />
@@ -15,13 +15,13 @@
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=a12e3537"></script>
+      <script src="../_static/documentation_options.js?v=84a24d03"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Going embedded" href="../embedded/index.html" />
+    <link rel="next" title="C-Wrapper API" href="wrapper.html" />
     <link rel="prev" title="XENSIV™ CMOS Radar Presence Detection and Tracking" href="../index.html" /> 
 </head>
 
@@ -62,8 +62,12 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#programming-interfaces">Programming Interfaces</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#wrapper-api">Wrapper API</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#use-case-api">Use-Case API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c-wrapper-api">C-Wrapper API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#use-case-api">Use-Case API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="wrapper.html">C-Wrapper API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api.html">Use-Case API</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -179,9 +183,9 @@
 <section id="programming-interfaces">
 <h2>Programming Interfaces<a class="headerlink" href="#programming-interfaces" title="Link to this heading"></a></h2>
 <p>The algorithm provides two levels of programming interfaces:</p>
-<section id="wrapper-api">
-<h3>Wrapper API<a class="headerlink" href="#wrapper-api" title="Link to this heading"></a></h3>
-<p>The <a class="reference internal" href="wrapper.html"><span class="std std-doc">Wrapper API</span></a> offers a low-level C interface for direct frame processing. It provides functions for:</p>
+<section id="c-wrapper-api">
+<h3>C-Wrapper API<a class="headerlink" href="#c-wrapper-api" title="Link to this heading"></a></h3>
+<p>The <a class="reference internal" href="wrapper.html"><span class="std std-doc">C-Wrapper API</span></a> offers a low-level C interface for direct frame processing. It provides functions for:</p>
 <ul class="simple">
 <li><p>Getting default configuration</p></li>
 <li><p>Initializing the processing pipeline</p></li>
@@ -200,6 +204,8 @@
 <li><p>Simplified integration for application development</p></li>
 </ul>
 <p>The Use-Case API abstracts complexity while providing robust, production-ready functionality for real-world applications.</p>
+<div class="toctree-wrapper compound">
+</div>
 </section>
 </section>
 </section>
@@ -209,13 +215,13 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="XENSIV™ CMOS Radar Presence Detection and Tracking" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../embedded/index.html" class="btn btn-neutral float-right" title="Going embedded" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="wrapper.html" class="btn btn-neutral float-right" title="C-Wrapper API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright - Infineon Technologies AG. Version 1.0.0 - e884d04.</p>
+    <p>&#169; Copyright - Infineon Technologies AG. Version 1.2.0 - 88ab146.</p>
   </div>
 
    

@@ -4,6 +4,10 @@
 
 The Presence Detection and Tracking (PDT) library converts raw data from the XENSIV™ 60 GHz CMOS radar sensor into real-time insights on indoor human activity. Because it operates on a frequency spectrum independent of visible light, the system ensures consistent performance in total darkness or low-visibility conditions without requiring optical clarity.
 
+### 1.2.0 (public release)
+
+Update of documentation to include details about the algorithm implementation and link to the documentation.
+
 ### 1.0.0 (public release)
 
 This is the initial release of the library to convert raw data from Infineon's cmos radar sensor
